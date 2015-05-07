@@ -1,20 +1,18 @@
-require linux.inc
+inherit kernel
+require recipes-kernel/linux/linux-yocto.inc
 
-DESCRIPTION = "Linux kernel"
 KERNEL_IMAGETYPE ?= "zImage"
 
 COMPATIBLE_MACHINE = "(arndale)"
 
-FILESPATH =. "${FILE_DIRNAME}/linux-exynos-${PV}:${FILE_DIRNAME}/linux-exynos-${PV}/${MACHINE}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-${LINUX_VERSION}:"
 
-S = "${WORKDIR}/git"
+LINUX_VERSION ?= "3.14"
+KBRANCH = "master"
 
-PV = "3.14"
-PR = "r1"
+SRC_URI = "git://github.com/torvalds/linux.git;bareclone=1;branch=${KBRANCH}"
+PV = "${LINUX_VERSION}+git${SRCPV}"
 
-SRC_URI = "git://github.com/torvalds/linux.git"
-SRCREV_pn-${PN} = "455c6fdbd219161bd09b1165f11699d6d73de11c"
+SRCREV = "455c6fdbd219161bd09b1165f11699d6d73de11c"
 
-SRC_URI += " \
-             file://defconfig \
-            "
+SRC_URI += "file://defconfig"
